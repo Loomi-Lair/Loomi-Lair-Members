@@ -1,0 +1,44 @@
+name: 构建并发布
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: 构建并发布
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate and build
+        run: |
+          npm run validate
+          npm run build
+
+      - name: Commit and push results
+        run: |
+          git config user.name "Loomi Lair Bot"
+          git config user.email "bot@loomilair.org"
+          git add dist/members.json dist/members.yaml
+          if git diff --cached --quiet; then
+            echo "没有变化，跳过提交"
+          else
+            git commit -m "chore: update aggregated members [skip ci]"
+            git push
+            echo "✅ 已更新聚合文件"
+          fi

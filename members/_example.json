@@ -1,0 +1,15 @@
+{
+    "id": "seeridia",
+    "name": "Seeridia",
+    "intro": "Frontend developer, Vue enthusiast",
+    "avatar": "https://avatars.githubusercontent.com/u/1234567?v=4",
+    "tags": [
+        "frontend",
+        "open-source"
+    ],
+    "links": {
+        "github": "https://github.com/Seeridia",
+        "homepage": "https://seeridia.dev",
+        "blog": "https://blog.seeridia.dev"
+    }
+}
