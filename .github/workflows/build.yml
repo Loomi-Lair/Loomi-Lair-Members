@@ -34,7 +34,7 @@ jobs:
         run: |
           git config user.name "Loomi Lair Bot"
           git config user.email "bot@loomilair.org"
-          git add dist/members.json dist/members.yaml
+          git add -f dist/members.json dist/members.yaml
           if git diff --cached --quiet; then
             echo "没有变化，跳过提交"
           else
