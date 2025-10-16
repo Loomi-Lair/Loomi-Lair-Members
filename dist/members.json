@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "id": "seeridia",
+    "name": "Seeridia",
+    "intro": "Developer & Designer",
+    "avatar": "https://cdn.seeridia.top/avatar.webp",
+    "tags": [
+      "Frontend",
+      "UX/UI"
+    ],
+    "links": {
+      "github": "https://github.com/Seeridia",
+      "homepage": "https://seeridia.top",
+      "blog": "https://seeridia.top/blog",
+      "zhihu": "https://www.zhihu.com/people/seeridia"
+    }
+  }
+]
