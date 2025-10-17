@@ -1,3 +1,13 @@
+- id: binbim
+  name: BB0813
+  intro: Developer & High School Senior & Music enthusiast
+  avatar: https://q1.qlogo.cn/g?b=qq&nk=1721822150&s=640
+  tags:
+    - AI Developer
+    - AstrBot Plugin Developer
+  links:
+    github: https://github.com/BB0813
+    homepage: https://home.binbim.top/
 - id: purpleplanen
   name: Purple Planen
   intro: Developer & Anime fan
@@ -20,3 +30,13 @@
     homepage: https://seeridia.top
     blog: https://seeridia.top/blog
     zhihu: https://www.zhihu.com/people/seeridia
+- id: shoutingyihui
+  name: shoutingyihui
+  intro: A freshman to the open-source world
+  avatar: >-
+    https://avatars.githubusercontent.com/u/222226289?s=400&u=59b29024850ba0a7ff30d3729a078797637bcf94&v=4
+  tags:
+    - unknown
+    - beginner
+  links:
+    github: https://github.com/shoutingyihui
