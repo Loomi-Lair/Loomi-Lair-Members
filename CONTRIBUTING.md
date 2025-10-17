@@ -24,7 +24,7 @@ LoomiLair 是一个前端学习与协作空间。所有代码都应**简洁、�
 | 组件文件        | PascalCase（大驼峰，所有词首字母大写）           | `HomeSection.vue`            |
 | 普通变量 / 函数 | camelCase（小驼峰，首词小写，其他词首字母大写）  | `isVisible`, `fetchUserData` |
 | 文件夹          | kebab-case（单词小写，词间用减号 `-` 连接）      | `user-profile/`              |
-| 常量            | UPPER_SNAKE_CASE （全大写，词间用下划线 `_` 连接 | `API_BASE_URL`               |
+| 常量            | UPPER_SNAKE_CASE （全大写，词间用下划线 `_` 连接） | `API_BASE_URL`               |
 | 路由路径        | kebab-case（单词小写，词间用减号 `-` 连接）      | `/about`, `/user-page`       |
 
 > 只要你的命名需要写比代码还长的注释，才能让别人看懂你在干什么——那命名就不够好。
