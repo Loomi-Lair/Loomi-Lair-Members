@@ -8,6 +8,16 @@
   links:
     github: https://github.com/BB0813
     homepage: https://home.binbim.top/
+- id: potato_paper_cup
+  name: 土豆纸杯
+  intro: Beginner Programmer, Digital Artist, Anime Fan
+  avatar: https://i1.hdslb.com/bfs/face/fc7a5f6bd895e86793913e6570db7076cab3a55e.jpg
+  tags:
+    - beginner-programmer
+    - digital-artist
+  links:
+    github: https://github.com/arknights-daisuike
+    bilibili: https://space.bilibili.com/355652506
 - id: purpleplanen
   name: Purple Planen
   intro: Developer & Anime fan
