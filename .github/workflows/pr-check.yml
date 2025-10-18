@@ -21,6 +21,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
+      - name: Fetch base branch
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,49 +34,80 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate member files
-        id: validate
+      - name: Validate PR changes
+        id: validate_pr
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE_BRANCH: origin/${{ github.event.pull_request.base.ref }}
         run: |
-          echo "## 🔍 验证结果" >> $GITHUB_STEP_SUMMARY
-          if npm run validate; then
-            echo "✅ 所有成员文件验证通过！" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 PR 变更验证" >> $GITHUB_STEP_SUMMARY
+          if node scripts/validate-pr.js; then
+            echo "✅ PR 变更验证通过！" >> $GITHUB_STEP_SUMMARY
             echo "status=success" >> $GITHUB_OUTPUT
           else
-            echo "❌ 验证失败，请检查错误信息" >> $GITHUB_STEP_SUMMARY
+            echo "❌ PR 验证失败，请检查错误信息" >> $GITHUB_STEP_SUMMARY
             echo "status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
 
-      - name: Test build
+      - name: Validate all member files
+        id: validate_all
+        if: steps.validate_pr.outputs.status == 'success'
         run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔍 完整性验证" >> $GITHUB_STEP_SUMMARY
+          if npm run validate; then
+            echo "✅ 所有成员文件验证通过！" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ 完整性验证失败" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+      - name: Test build
+        if: steps.validate_all.conclusion == 'success'
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 🔨 构建测试" >> $GITHUB_STEP_SUMMARY
           npm run build
           echo "✅ 构建成功" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📊 统计信息" >> $GITHUB_STEP_SUMMARY
-          echo "- 成员数量: $(cat dist/members.json | grep -c '"id":')" >> $GITHUB_STEP_SUMMARY
+          MEMBER_COUNT=$(cat dist/members.json | grep -c '"id":')
+          echo "- 总成员数：${MEMBER_COUNT} 人" >> $GITHUB_STEP_SUMMARY
 
-      - name: Comment PR
-        if: steps.validate.outputs.status == 'success'
+      - name: Post welcome comment
+        if: steps.validate_pr.outputs.is_new_member == 'true'
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const members = JSON.parse(fs.readFileSync('dist/members.json', 'utf8'));
-            const memberCount = members.length;
+            const memberName = '${{ steps.validate_pr.outputs.member_name }}';
+            const memberId = '${{ steps.validate_pr.outputs.member_id }}';
+            const memberIntro = '${{ steps.validate_pr.outputs.member_intro }}';
+            const memberAvatar = '${{ steps.validate_pr.outputs.member_avatar }}';
+            const memberGithub = '${{ steps.validate_pr.outputs.member_github }}';
 
-            const comment = `## ✅ 验证通过！
+            const comment = `## 你好，${memberName}！
 
-            🎉 你的成员数据已通过验证！
+            <img src="${memberAvatar}" width="100" height="100" style="border-radius: 50%;" />
 
-            **📊 当前统计：**
-            - 总成员数：${memberCount} 人
+            🎉 **欢迎加入 Loomi Lair 社区！**
+
+            **� 你的信息：**
+            - 🆔 ID: \`${memberId}\`
+            - 📝 简介: ${memberIntro}
+            - 🔗 GitHub: ${memberGithub}
+
+            **✅ 验证状态：**
+            - ✅ PR 变更检查通过
+            - ✅ 数据格式验证通过
+            - ✅ 完整性验证通过
+            - ✅ 构建测试通过
 
             **✨ 下一步：**
-            合并此 PR 后，数据将自动构建并发布。
+            合并此 PR 后，你的信息将自动加入到成员列表中！
 
             ---
-            *自动生成 by Loomi Lair Bot*`;
+            *🤖 自动生成 by Loomi Lair Bot*`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,

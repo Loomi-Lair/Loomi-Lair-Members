@@ -5,8 +5,10 @@
     "type": "module",
     "scripts": {
         "validate": "node scripts/validate.js",
+        "validate:pr": "node scripts/validate-pr.js",
         "build": "node scripts/build.js",
-        "check": "npm run validate && npm run build"
+        "check": "npm run validate && npm run build",
+        "check:pr": "npm run validate:pr && npm run validate && npm run build"
     },
     "repository": {
       "type": "git",
