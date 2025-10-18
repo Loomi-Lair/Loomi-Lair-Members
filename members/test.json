@@ -1,0 +1,13 @@
+{
+    "id": "test",
+    "name": "test",
+    "intro": "asd",
+    "avatar": "https://cdn.seeridia.top/avatar.webp",
+    "tags": [
+        "test"
+    ],
+    "links": {
+        "github": "https://github.com/Anyayay"
+    }
+}
+
