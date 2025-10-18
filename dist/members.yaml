@@ -8,6 +8,15 @@
   links:
     github: https://github.com/BB0813
     homepage: https://home.binbim.top/
+- id: geqiant
+  name: moonlight
+  intro: cs enthusiast&desire to become a master of ml
+  avatar: https://avatars.githubusercontent.com/u/141001038?v=4
+  tags:
+    - develop
+    - new
+  links:
+    github: https://github.com/geqiant
 - id: potato_paper_cup
   name: 土豆纸杯
   intro: Beginner Programmer, Digital Artist, Anime Fan
