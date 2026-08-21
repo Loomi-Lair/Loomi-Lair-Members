@@ -1,117 +1,60 @@
 name: PR 验证
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
+
+permissions:
+  contents: read
 
 jobs:
   validate:
     name: 验证成员数据
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      issues: write
-      contents: read
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Fetch base branch
-        run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}:${{ github.event.pull_request.base.ref }}
+      - name: Fetch base commit
+        run: git fetch --no-tags origin ${{ github.event.pull_request.base.sha }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 24
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
       - name: Validate PR changes
-        id: validate_pr
         env:
-          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-          BASE_BRANCH: origin/${{ github.event.pull_request.base.ref }}
+          BASE_COMMIT: ${{ github.event.pull_request.base.sha }}
         run: |
-          echo "## 🔍 PR 变更验证" >> $GITHUB_STEP_SUMMARY
-          if node scripts/validate-pr.js; then
-            echo "✅ PR 变更验证通过！" >> $GITHUB_STEP_SUMMARY
-            echo "status=success" >> $GITHUB_OUTPUT
-          else
-            echo "❌ PR 验证失败，请检查错误信息" >> $GITHUB_STEP_SUMMARY
-            echo "status=failed" >> $GITHUB_OUTPUT
-            exit 1
-          fi
+          echo "## 🔍 PR 变更验证" >> "$GITHUB_STEP_SUMMARY"
+          node scripts/validate-pr.js
+          echo "✅ PR 变更验证通过！" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Validate all member files
-        id: validate_all
-        if: steps.validate_pr.outputs.status == 'success'
         run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🔍 完整性验证" >> $GITHUB_STEP_SUMMARY
-          if npm run validate; then
-            echo "✅ 所有成员文件验证通过！" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "❌ 完整性验证失败" >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "## 🔍 完整性验证" >> "$GITHUB_STEP_SUMMARY"
+          npm run validate
+          echo "✅ 所有成员文件验证通过！" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Test build
-        if: steps.validate_all.conclusion == 'success'
         run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🔨 构建测试" >> $GITHUB_STEP_SUMMARY
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "## 🔨 构建测试" >> "$GITHUB_STEP_SUMMARY"
           npm run build
-          echo "✅ 构建成功" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 📊 统计信息" >> $GITHUB_STEP_SUMMARY
-          MEMBER_COUNT=$(cat dist/members.json | grep -c '"id":')
-          echo "- 总成员数：${MEMBER_COUNT} 人" >> $GITHUB_STEP_SUMMARY
-
-      - name: Post welcome comment
-        if: steps.validate_pr.outputs.is_new_member == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const memberName = '${{ steps.validate_pr.outputs.member_name }}';
-            const memberId = '${{ steps.validate_pr.outputs.member_id }}';
-            const memberIntro = '${{ steps.validate_pr.outputs.member_intro }}';
-            const memberAvatar = '${{ steps.validate_pr.outputs.member_avatar }}';
-            const memberGithub = '${{ steps.validate_pr.outputs.member_github }}';
-
-            const comment = `## 你好，${memberName}！
-
-            <img src="${memberAvatar}" width="100" height="100" style="border-radius: 50%;" />
-
-            🎉 **欢迎加入 Loomi Lair 社区！**
-
-            **� 你的信息：**
-            - 🆔 ID: \`${memberId}\`
-            - 📝 简介: ${memberIntro}
-            - 🔗 GitHub: ${memberGithub}
-
-            **✅ 验证状态：**
-            - ✅ PR 变更检查通过
-            - ✅ 数据格式验证通过
-            - ✅ 完整性验证通过
-            - ✅ 构建测试通过
-
-            **✨ 下一步：**
-            合并此 PR 后，你的信息将自动加入到成员列表中！
-
-            ---
-            *🤖 自动生成 by Loomi Lair Bot*`;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
+          echo "✅ 构建成功" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### 📊 统计信息" >> "$GITHUB_STEP_SUMMARY"
+          MEMBER_COUNT=$(node -e "console.log(JSON.parse(require('fs').readFileSync('dist/members.json', 'utf8')).length)")
+          echo "- 总成员数：${MEMBER_COUNT} 人" >> "$GITHUB_STEP_SUMMARY"
