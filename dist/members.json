@@ -110,5 +110,19 @@
     "links": {
       "github": "https://github.com/shoutingyihui"
     }
+  },
+  {
+    "id": "welt",
+    "name": "welt02",
+    "intro": "Computer vision algorithm engineer and AI agent developer",
+    "avatar": "https://avatars.githubusercontent.com/u/147969417?v=4&size=64",
+    "tags": [
+      "Computer vision",
+      "Deep Learning",
+      "AI agent & LLM"
+    ],
+    "links": {
+      "github": "https://github.com/welt02"
+    }
   }
 ]
