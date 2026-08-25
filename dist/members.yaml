@@ -101,6 +101,16 @@
     - beginner
   links:
     github: https://github.com/shoutingyihui
+- id: warm
+  name: WaRm
+  intro: 你好，我是23级软件工程专业的本科生
+  avatar: >-
+    https://avatars.githubusercontent.com/u/152481937?s=400&u=25f4fc5873c845825e849f9c4f8802d6f0525ec9&v=4
+  tags:
+    - 软件工程
+    - 航空航天
+  links:
+    github: https://github.com/Warm7yry
 - id: welt
   name: welt02
   intro: Computer vision algorithm engineer and AI agent developer
